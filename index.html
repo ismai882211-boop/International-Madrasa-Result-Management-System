@@ -630,3 +630,31 @@ window.deleteM=id=>{
   students=ss;
   exams=es;
   records=re
+records=records.filter(r=>exams.some(e=>e.id===r.eid)&&students.some(s=>s.id===r.sid));
+save();
+};
+
+window.deleteS=id=>{
+if(!confirm('শিক্ষার্থী ও তার ফলাফল মুছবেন?'))return;
+students=students.filter(s=>s.id!==id);
+records=records.filter(r=>r.sid!==id);
+save();
+};
+
+window.deleteE=id=>{
+if(!confirm('পরীক্ষা ও এর ফলাফল মুছবেন?'))return;
+exams=exams.filter(e=>e.id!==id);
+records=records.filter(r=>r.eid!==id);
+save();
+};
+
+document.querySelectorAll('nav button[data-tab]').forEach(btn=>{
+btn.addEventListener('click',()=>{
+document.querySelectorAll('.tab').forEach(s=>s.classList.add('hide'));
+$(btn.dataset.tab).classList.remove('hide');
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+});
+});
+
+render();
