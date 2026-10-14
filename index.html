@@ -4,17 +4,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>IMRMS - Result Management</title>
+<title>IMRMS - Madrasa Result Management System</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f1f5f2;color:#19352a;font-family:Arial,sans-serif}
-header{background:#116b48;color:white;padding:20px 14px;text-align:center}
-header h1{margin:0 0 8px}
+body{margin:0;background:#f1f5f2;color:#19352a;font-family:Arial,"Noto Sans Bengali",sans-serif}
+header{background:#116b48;color:white;padding:22px 14px;text-align:center}
+header h1{margin:0 0 8px;font-size:30px}
 nav{display:flex;flex-wrap:wrap;gap:7px;padding:12px;background:white;justify-content:center}
 button{border:0;border-radius:7px;padding:11px 13px;background:#116b48;color:white;font-size:14px;cursor:pointer}
 nav button{background:#e4eee8;color:#15583e}
 nav button.active{background:#116b48;color:white}
-main{max-width:950px;margin:auto;padding:14px}
+main{max-width:1000px;margin:auto;padding:14px}
 .panel{background:white;padding:16px;border-radius:12px;margin-bottom:14px;box-shadow:0 2px 8px #0001}
 h2{font-size:21px;margin-top:0}
 h3{font-size:17px}
@@ -30,18 +30,113 @@ th{background:#e5efe9}
 .small{font-size:12px;color:#617268}
 .danger{background:#b52c37}
 .secondary{background:#596b61}
-.hide{display:none}
+.hide{display:none!important}
 .actions{display:flex;gap:7px;flex-wrap:wrap}
 footer{text-align:center;padding:20px;color:#617268}
+
 @media print{
-nav,.no-print,form,footer{display:none!important}
-body{background:white}
-main{max-width:none;padding:0}
-.panel{box-shadow:none;border:0}
+  @page{size:A4 landscape;margin:10mm}
+
+  body{
+    background:white!important;
+    color:#111!important;
+    font-family:Arial,"Noto Sans Bengali",sans-serif;
+  }
+
+  body>header,
+  body>nav,
+  body>footer,
+  main>section:not(#results),
+  #results>.panel>h2,
+  #results>.panel>label,
+  #results>.panel>select,
+  #results>.panel>.actions{
+    display:none!important;
+  }
+
+  main{
+    max-width:none!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  #results,
+  #results>.panel,
+  #resultOutput,
+  #resultOutput>.panel{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    background:white!important;
+  }
+
+  #resultOutput>.panel>h3:first-child{
+    text-align:center!important;
+    font-size:25px!important;
+    font-weight:bold!important;
+    line-height:1.5!important;
+    margin:0 0 3px!important;
+    color:#111!important;
+  }
+
+  #resultOutput>.panel>p:first-of-type{
+    text-align:center!important;
+    font-size:12px!important;
+    margin:0 0 10px!important;
+    color:#222!important;
+  }
+
+  #resultOutput>.panel>h3:nth-of-type(2){
+    text-align:center!important;
+    font-size:17px!important;
+    margin:8px 0 14px!important;
+    color:#111!important;
+  }
+
+  #resultOutput .tablewrap{
+    overflow:visible!important;
+    width:100%!important;
+  }
+
+  #resultOutput table{
+    width:100%!important;
+    border-collapse:collapse!important;
+    font-size:10px!important;
+  }
+
+  #resultOutput th,
+  #resultOutput td{
+    border:1px solid #333!important;
+    padding:5px 3px!important;
+    color:#111!important;
+    text-align:center!important;
+    overflow-wrap:anywhere;
+  }
+
+  #resultOutput th{
+    background:#e5efe9!important;
+    print-color-adjust:exact;
+    -webkit-print-color-adjust:exact;
+  }
+
+  #resultOutput tr{
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  #resultOutput .small{
+    font-size:10px!important;
+    color:#333!important;
+    margin-top:10px!important;
+  }
 }
 </style>
 </head>
 <body>
+
 <header>
 <h1>IMRMS</h1>
 <div>International Madrasa Result Management System</div>
@@ -59,6 +154,7 @@ main{max-width:none;padding:0}
 </nav>
 
 <main>
+
 <section id="home" class="tab">
 <div class="panel">
 <h2>স্বাগতম</h2>
@@ -74,8 +170,8 @@ main{max-width:none;padding:0}
 <h3>শুরু করার নিয়ম</h3>
 <p>১. প্রথমে মাদ্রাসা যোগ করুন।</p>
 <p>২. শিক্ষার্থীদের তথ্য যোগ করুন।</p>
-<p>৩. পরীক্ষার নাম ও বিষয় তৈরি করুন।</p>
-<p>৪. নম্বর এন্ট্রি করে ফলাফল দেখুন।</p>
+<p>৩. পরীক্ষার নাম, শ্রেণি ও বিষয় তৈরি করুন।</p>
+<p>৪. নম্বর এন্ট্রি করে ফলাফল দেখুন ও PDF তৈরি করুন।</p>
 </div>
 </section>
 
@@ -137,7 +233,8 @@ main{max-width:none;padding:0}
 </form>
 </div>
 <div class="panel">
-<h3>পরীক্ষার তালিকা</h3><div class="tablewrap" id="eList"></div>
+<h3>পরীক্ষার তালিকা</h3>
+<div class="tablewrap" id="eList"></div>
 </div>
 </section>
 
@@ -178,183 +275,359 @@ main{max-width:none;padding:0}
 <p class="small">ব্যাকআপ ফাইল নিরাপদে রাখুন। ফিরিয়ে আনার সময় বর্তমান ডেটা প্রতিস্থাপিত হবে।</p>
 </div>
 </section>
+
 </main>
 <footer>IMRMS · Madrasa Result Management</footer>
 
 <script>
 const $=id=>document.getElementById(id);
-const read=key=>{try{return JSON.parse(localStorage.getItem(key)||'[]')}catch(e){return []}};
+const read=key=>{
+  try{return JSON.parse(localStorage.getItem(key)||'[]')}
+  catch(e){return []}
+};
+
 let madrasas=read('imrms_m');
 let students=read('imrms_s');
 let exams=read('imrms_e');
 let records=read('imrms_r');
+
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+
 const save=()=>{
-localStorage.setItem('imrms_m',JSON.stringify(madrasas));
-localStorage.setItem('imrms_s',JSON.stringify(students));
-localStorage.setItem('imrms_e',JSON.stringify(exams));
-localStorage.setItem('imrms_r',JSON.stringify(records));
-render();
+  localStorage.setItem('imrms_m',JSON.stringify(madrasas));
+  localStorage.setItem('imrms_s',JSON.stringify(students));
+  localStorage.setItem('imrms_e',JSON.stringify(exams));
+  localStorage.setItem('imrms_r',JSON.stringify(records));
+  render();
 };
+
 function options(id,items,placeholder,labelFn){
-const el=$(id),old=el.value;
-el.innerHTML='<option value="">'+esc(placeholder)+'</option>'+items.map(x=>'<option value="'+esc(x.id)+'">'+esc(labelFn(x))+'</option>').join('');
-if(items.some(x=>x.id===old))el.value=old;
+  const el=$(id),old=el.value;
+  el.innerHTML='<option value="">'+esc(placeholder)+'</option>'+
+    items.map(x=>'<option value="'+esc(x.id)+'">'+esc(labelFn(x))+'</option>').join('');
+  if(items.some(x=>x.id===old))el.value=old;
 }
+
 function render(){
-$('countM').textContent=madrasas.length;
-$('countS').textContent=students.length;
-$('countE').textContent=exams.length;
-$('countR').textContent=records.length;
-options('sMadrasa',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
-options('eMadrasa',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
-options('studentFilter',madrasas,'সব মাদ্রাসা',x=>x.name);
-options('markM',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
-options('resultM',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
-renderM();renderS();renderE();updateMarkOptions();updateResultOptions();
+  $('countM').textContent=madrasas.length;
+  $('countS').textContent=students.length;
+  $('countE').textContent=exams.length;
+  $('countR').textContent=records.length;
+
+  options('sMadrasa',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
+  options('eMadrasa',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
+  options('studentFilter',madrasas,'সব মাদ্রাসা',x=>x.name);
+  options('markM',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
+  options('resultM',madrasas,'মাদ্রাসা নির্বাচন করুন',x=>x.name);
+
+  renderM();
+  renderS();
+  renderE();
+  updateMarkOptions();
+  updateResultOptions();
 }
+
 function renderM(){
-$('mList').innerHTML=madrasas.length?'<table><tr><th>নাম</th><th>ঠিকানা</th><th>কাজ</th></tr>'+madrasas.map(m=>'<tr><td>'+esc(m.name)+'</td><td>'+esc(m.address)+'</td><td><button class="danger" onclick="deleteM(\''+m.id+'\')">মুছুন</button></td></tr>').join('')+'</table>':'এখনও কোনো মাদ্রাসা যোগ করা হয়নি।';
+  $('mList').innerHTML=madrasas.length
+    ?'<table><tr><th>নাম</th><th>ঠিকানা</th><th>কাজ</th></tr>'+
+      madrasas.map(m=>'<tr><td>'+esc(m.name)+'</td><td>'+esc(m.address)+
+      '</td><td><button class="danger" onclick="deleteM(\''+m.id+'\')">মুছুন</button></td></tr>').join('')+
+      '</table>'
+    :'এখনও কোনো মাদ্রাসা যোগ করা হয়নি।';
 }
+
 function renderS(){
-const filter=$('studentFilter').value;
-const arr=students.filter(s=>!filter||s.mid===filter);
-$('sList').innerHTML=arr.length?'<table><tr><th>নাম</th><th>রোল</th><th>শ্রেণি</th><th>মাদ্রাসা</th><th>কাজ</th></tr>'+arr.map(s=>'<tr><td>'+esc(s.name)+'</td><td>'+esc(s.roll)+'</td><td>'+esc(s.clas)+'</td><td>'+esc(madrasas.find(m=>m.id===s.mid)?.name||'')+'</td><td><button class="danger" onclick="deleteS(\''+s.id+'\')">মুছুন</button></td></tr>').join('')+'</table>':'কোনো শিক্ষার্থী পাওয়া যায়নি।';
+  const filter=$('studentFilter').value;
+  const arr=students.filter(s=>!filter||s.mid===filter);
+
+  $('sList').innerHTML=arr.length
+    ?'<table><tr><th>নাম</th><th>রোল</th><th>শ্রেণি</th><th>মাদ্রাসা</th><th>কাজ</th></tr>'+
+      arr.map(s=>'<tr><td>'+esc(s.name)+'</td><td>'+esc(s.roll)+'</td><td>'+esc(s.clas)+
+      '</td><td>'+esc(madrasas.find(m=>m.id===s.mid)?.name||'')+
+      '</td><td><button class="danger" onclick="deleteS(\''+s.id+'\')">মুছুন</button></td></tr>').join('')+
+      '</table>'
+    :'কোনো শিক্ষার্থী পাওয়া যায়নি।';
 }
+
 function renderE(){
-$('eList').innerHTML=exams.length?'<table><tr><th>পরীক্ষা</th><th>শ্রেণি</th><th>মাদ্রাসা</th><th>বিষয়</th><th>কাজ</th></tr>'+exams.map(e=>'<tr><td>'+esc(e.name)+'</td><td>'+esc(e.clas)+'</td><td>'+esc(madrasas.find(m=>m.id===e.mid)?.name||'')+'</td><td>'+e.subjects.map(s=>esc(s.name)+' ('+s.max+')').join(', ')+'</td><td><button class="danger" onclick="deleteE(\''+e.id+'\')">মুছুন</button></td></tr>').join('')+'</table>':'এখনও কোনো পরীক্ষা তৈরি হয়নি।';
+  $('eList').innerHTML=exams.length
+    ?'<table><tr><th>পরীক্ষা</th><th>শ্রেণি</th><th>মাদ্রাসা</th><th>বিষয়</th><th>কাজ</th></tr>'+
+      exams.map(e=>'<tr><td>'+esc(e.name)+'</td><td>'+esc(e.clas)+
+      '</td><td>'+esc(madrasas.find(m=>m.id===e.mid)?.name||'')+
+      '</td><td>'+e.subjects.map(s=>esc(s.name)+' ('+s.max+')').join(', ')+
+      '</td><td><button class="danger" onclick="deleteE(\''+e.id+'\')">মুছুন</button></td></tr>').join('')+
+      '</table>'
+    :'এখনও কোনো পরীক্ষা তৈরি হয়নি।';
 }
+
 function updateMarkOptions(){
-const mid=$('markM').value;
-options('markE',exams.filter(e=>e.mid===mid),'পরীক্ষা নির্বাচন করুন',e=>e.name+' - '+e.clas);
-updateStudents();
+  const mid=$('markM').value;
+  options('markE',exams.filter(e=>e.mid===mid),'পরীক্ষা নির্বাচন করুন',e=>e.name+' - '+e.clas);
+  updateStudents();
 }
+
 function updateStudents(){
-const mid=$('markM').value,eid=$('markE').value;
-const ex=exams.find(e=>e.id===eid);
-options('markS',students.filter(s=>s.mid===mid&&(!ex||(s.clas===ex.clas&&String(s.year)===String(ex.year)))),'শিক্ষার্থী নির্বাচন করুন',s=>s.roll+' - '+s.name);
-drawSubjectInputs();
+  const mid=$('markM').value,eid=$('markE').value;
+  const ex=exams.find(e=>e.id===eid);
+  options('markS',students.filter(s=>
+    s.mid===mid&&(!ex||(s.clas===ex.clas&&String(s.year)===String(ex.year)))
+  ),'শিক্ষার্থী নির্বাচন করুন',s=>s.roll+' - '+s.name);
+  drawSubjectInputs();
 }
+
 function drawSubjectInputs(){
-const e=exams.find(x=>x.id===$('markE').value);
-const s=students.find(x=>x.id===$('markS').value);
-const rec=records.find(r=>r.eid===e?.id&&r.sid===s?.id);
-$('subjectInputs').innerHTML=e?e.subjects.map((sub,i)=>'<label>'+esc(sub.name)+' (পূর্ণমান '+sub.max+')</label><input type="number" min="0" max="'+sub.max+'" step="any" id="mark_'+i+'" value="'+(rec&&rec.marks[sub.name]!=null?esc(rec.marks[sub.name]):'')+'" required>').join(''):'<p>আগে মাদ্রাসা ও পরীক্ষা নির্বাচন করুন।</p>';
+  const e=exams.find(x=>x.id===$('markE').value);
+  const s=students.find(x=>x.id===$('markS').value);
+  const rec=records.find(r=>r.eid===e?.id&&r.sid===s?.id);
+
+  $('subjectInputs').innerHTML=e
+    ?e.subjects.map((sub,i)=>'<label>'+esc(sub.name)+' (পূর্ণমান '+sub.max+')</label>'+
+      '<input type="number" min="0" max="'+sub.max+'" step="any" id="mark_'+i+
+      '" value="'+(rec&&rec.marks[sub.name]!=null?esc(rec.marks[sub.name]):'')+'" required>').join('')
+    :'<p>আগে মাদ্রাসা ও পরীক্ষা নির্বাচন করুন।</p>';
 }
+
 function updateResultOptions(){
-const mid=$('resultM').value;
-options('resultE',exams.filter(e=>e.mid===mid),'পরীক্ষা নির্বাচন করুন',e=>e.name+' - '+e.clas);
+  const mid=$('resultM').value;
+  options('resultE',exams.filter(e=>e.mid===mid),'পরীক্ষা নির্বাচন করুন',e=>e.name+' - '+e.clas);
+  $('resultOutput').innerHTML='';
 }
+
 $('mForm').addEventListener('submit',ev=>{
-ev.preventDefault();
-madrasas.push({id:uid(),name:$('mName').value.trim(),address:$('mAddress').value.trim(),code:$('mCode').value.trim()});
-ev.target.reset();save();alert('মাদ্রাসা যোগ হয়েছে।');
+  ev.preventDefault();
+  madrasas.push({
+    id:uid(),name:$('mName').value.trim(),
+    address:$('mAddress').value.trim(),code:$('mCode').value.trim()
+  });
+  ev.target.reset();
+  save();
+  alert('মাদ্রাসা যোগ হয়েছে।');
 });
+
 $('sForm').addEventListener('submit',ev=>{
-ev.preventDefault();
-if(!$('sMadrasa').value)return alert('মাদ্রাসা নির্বাচন করুন।');
-students.push({id:uid(),mid:$('sMadrasa').value,name:$('sName').value.trim(),roll:$('sRoll').value.trim(),clas:$('sClass').value.trim(),year:$('sYear').value,guardian:$('sGuardian').value.trim()});
-ev.target.reset();$('sYear').value='2026';save();alert('শিক্ষার্থী যোগ হয়েছে।');
+  ev.preventDefault();
+  if(!$('sMadrasa').value)return alert('মাদ্রাসা নির্বাচন করুন।');
+
+  students.push({
+    id:uid(),mid:$('sMadrasa').value,name:$('sName').value.trim(),
+    roll:$('sRoll').value.trim(),clas:$('sClass').value.trim(),
+    year:$('sYear').value,guardian:$('sGuardian').value.trim()
+  });
+
+  ev.target.reset();
+  $('sYear').value='2026';
+  save();
+  alert('শিক্ষার্থী যোগ হয়েছে।');
 });
+
 $('eForm').addEventListener('submit',ev=>{
-ev.preventDefault();
-const subjects=$('eSubjects').value.split('\n').map(line=>{
-const p=line.trim().split(':');
-return {name:p.slice(0,-1).join(':').trim(),max:Number(p[p.length-1])};
-}).filter(s=>s.name&&Number.isFinite(s.max)&&s.max>0);
-if(!subjects.length)return alert('বিষয় ও পূর্ণমান সঠিকভাবে লিখুন।');
-if(subjects.some(s=>subjects.filter(t=>t.name===s.name).length>1))return alert('একই বিষয়ের নাম একাধিকবার দেওয়া যাবে না।');
-exams.push({id:uid(),mid:$('eMadrasa').value,name:$('eName').value.trim(),clas:$('eClass').value.trim(),year:$('eYear').value,subjects});
-ev.target.reset();$('eYear').value='2026';save();alert('পরীক্ষা তৈরি হয়েছে।');
+  ev.preventDefault();
+
+  const subjects=$('eSubjects').value.split('\n').map(line=>{
+    const p=line.trim().split(':');
+    return {name:p.slice(0,-1).join(':').trim(),max:Number(p[p.length-1])};
+  }).filter(s=>s.name&&Number.isFinite(s.max)&&s.max>0);
+
+  if(!subjects.length)return alert('বিষয় ও পূর্ণমান সঠিকভাবে লিখুন।');
+
+  if(subjects.some(s=>subjects.filter(t=>t.name===s.name).length>1))
+    return alert('একই বিষয়ের নাম একাধিকবার দেওয়া যাবে না।');
+
+  exams.push({
+    id:uid(),mid:$('eMadrasa').value,name:$('eName').value.trim(),
+    clas:$('eClass').value.trim(),year:$('eYear').value,subjects
+  });
+
+  ev.target.reset();
+  $('eYear').value='2026';
+  save();
+  alert('পরীক্ষা তৈরি হয়েছে।');
 });
+
 $('markM').addEventListener('change',updateMarkOptions);
 $('markE').addEventListener('change',updateStudents);
 $('markS').addEventListener('change',drawSubjectInputs);
 $('studentFilter').addEventListener('change',renderS);
 $('resultM').addEventListener('change',updateResultOptions);
+
 $('saveMarks').addEventListener('click',()=>{
-const e=exams.find(x=>x.id===$('markE').value),s=students.find(x=>x.id===$('markS').value);
-if(!e||!s)return alert('মাদ্রাসা, পরীক্ষা ও শিক্ষার্থী নির্বাচন করুন।');
-const marks={};
-for(let i=0;i<e.subjects.length;i++){
-const val=$('mark_'+i).value,n=Number(val),sub=e.subjects[i];
-if(val===''||!Number.isFinite(n)||n<0||n>sub.max)return alert(sub.name+'-এর নম্বর ০ থেকে '+sub.max+'-এর মধ্যে দিন।');
-marks[sub.name]=n;
-}
-const old=records.findIndex(r=>r.eid===e.id&&r.sid===s.id);
-const rec={id:old>=0?records[old].id:uid(),eid:e.id,sid:s.id,marks};
-if(old>=0)records[old]=rec;else records.push(rec);
-save();alert('নম্বর সংরক্ষণ হয়েছে।');
+  const e=exams.find(x=>x.id===$('markE').value);
+  const s=students.find(x=>x.id===$('markS').value);
+
+  if(!e||!s)return alert('মাদ্রাসা, পরীক্ষা ও শিক্ষার্থী নির্বাচন করুন।');
+
+  const marks={};
+
+  for(let i=0;i<e.subjects.length;i++){
+    const val=$('mark_'+i).value,n=Number(val),sub=e.subjects[i];
+
+    if(val===''||!Number.isFinite(n)||n<0||n>sub.max)
+      return alert(sub.name+'-এর নম্বর ০ থেকে '+sub.max+'-এর মধ্যে দিন।');
+
+    marks[sub.name]=n;
+  }
+
+  const old=records.findIndex(r=>r.eid===e.id&&r.sid===s.id);
+  const rec={id:old>=0?records[old].id:uid(),eid:e.id,sid:s.id,marks};
+
+  if(old>=0)records[old]=rec;
+  else records.push(rec);
+
+  save();
+  alert('নম্বর সংরক্ষণ হয়েছে।');
 });
+
 function grade(p){
-if(p>=80)return ['A+', '5.00'];
-if(p>=70)return ['A','4.00'];
-if(p>=60)return ['A-','3.50'];
-if(p>=50)return ['B','3.00'];
-if(p>=40)return ['C','2.00'];
-if(p>=33)return ['D','1.00'];
-return ['F','0.00'];
+  if(p>=80)return ['A+','5.00'];
+  if(p>=70)return ['A','4.00'];
+  if(p>=60)return ['A-','3.50'];
+  if(p>=50)return ['B','3.00'];
+  if(p>=40)return ['C','2.00'];
+  if(p>=33)return ['D','1.00'];
+  return ['F','0.00'];
 }
+
 function showResults(){
-const e=exams.find(x=>x.id===$('resultE').value);
-if(!e)return alert('পরীক্ষা নির্বাচন করুন।');
-const m=madrasas.find(x=>x.id===e.mid);
-const roster=students.filter(s=>s.mid===e.mid&&s.clas===e.clas&&String(s.year)===String(e.year));
-let rows=roster.map(s=>{
-const r=records.find(x=>x.eid===e.id&&x.sid===s.id);
-const totalMax=e.subjects.reduce((a,x)=>a+x.max,0);
-const total=e.subjects.reduce((a,x)=>a+(r?Number(r.marks[x.name]||0):0),0);
-const complete=!!r&&e.subjects.every(x=>r.marks[x.name]!==undefined);
-const pass=complete&&e.subjects.every(x=>Number(r.marks[x.name])>=x.max*.33);
-const p=totalMax?total/totalMax*100:0;
-const g=grade(p);
-return {s,r,total,totalMax,p,complete,pass,g};
-});
-rows.sort((a,b)=>b.total-a.total||String(a.s.roll).localeCompare(String(b.s.roll),'bn',{numeric:true}));
-let rank=0,last=null;
-rows.forEach((r,i)=>{if(!r.complete){r.rank='—';return;}if(last===null||r.total!==last)rank=i+1;r.rank=rank;last=r.total;});
-$('resultOutput').innerHTML='<div class="panel"><h3>'+esc(m?.name||'')+'</h3><p>'+esc(m?.address||'')+'</p><h3>'+esc(e.name)+' — '+esc(e.clas)+' — '+esc(e.year)+'</h3><div class="tablewrap"><table><tr><th>মেধা</th><th>রোল</th><th>নাম</th>'+e.subjects.map(x=>'<th>'+esc(x.name)+'<br>('+x.max+')</th>').join('')+'<th>মোট</th><th>শতাংশ</th><th>গ্রেড</th><th>ফল</th></tr>'+rows.map(r=>'<tr><td>'+r.rank+'</td><td>'+esc(r.s.roll)+'</td><td>'+esc(r.s.name)+'</td>'+e.subjects.map(x=>'<td>'+(r.r&&r.r.marks[x.name]!==undefined?esc(r.r.marks[x.name]):'—')+'</td>').join('')+'<td>'+r.total+'/'+r.totalMax+'</td><td>'+(r.complete?r.p.toFixed(2)+'%':'—')+'</td><td>'+(r.complete?r.g[0]:'—')+'</td><td>'+(r.complete?(r.pass?'পাস':'ফেল'):'অসম্পূর্ণ')+'</td></tr>').join('')+'</table></div><p class="small">মেধাক্রম মোট নম্বর অনুযায়ী। কোনো বিষয়ের নম্বর অনুপস্থিত থাকলে ফল অসম্পূর্ণ দেখাবে।</p></div>';
+  const e=exams.find(x=>x.id===$('resultE').value);
+
+  if(!e)return alert('পরীক্ষা নির্বাচন করুন।');
+
+  const m=madrasas.find(x=>x.id===e.mid);
+
+  /*
+    শুধু নির্বাচিত পরীক্ষায় নম্বর সংরক্ষিত শিক্ষার্থীদের দেখানো হবে।
+    এতে অন্য শিক্ষার্থী বা নম্বরবিহীন নাম PDF-তে আসবে না।
+  */
+  const enteredIds=new Set(
+    records.filter(r=>r.eid===e.id).map(r=>r.sid)
+  );
+
+  const roster=students.filter(s=>
+    s.mid===e.mid&&
+    s.clas===e.clas&&
+    String(s.year)===String(e.year)&&
+    enteredIds.has(s.id)
+  );
+
+  if(!roster.length){
+    $('resultOutput').innerHTML=
+      '<div class="panel"><p>এই পরীক্ষায় এখনো কোনো শিক্ষার্থীর নম্বর সংরক্ষণ করা হয়নি।</p></div>';
+    return;
+  }
+
+  let rows=roster.map(s=>{
+    const r=records.find(x=>x.eid===e.id&&x.sid===s.id);
+    const totalMax=e.subjects.reduce((a,x)=>a+x.max,0);
+    const total=e.subjects.reduce((a,x)=>a+(r?Number(r.marks[x.name]||0):0),0);
+    const complete=!!r&&e.subjects.every(x=>r.marks[x.name]!==undefined);
+    const pass=complete&&e.subjects.every(x=>Number(r.marks[x.name])>=x.max*.33);
+    const p=totalMax?total/totalMax*100:0;
+    const g=grade(p);
+
+    return {s,r,total,totalMax,p,complete,pass,g,rank:'—'};
+  });
+
+  rows.sort((a,b)=>
+    b.total-a.total||
+    String(a.s.roll).localeCompare(String(b.s.roll),'bn',{numeric:true})
+  );
+
+  let rank=0,last=null;
+  rows.forEach((r,i)=>{
+    if(!r.complete){r.rank='—';return;}
+    if(last===null||r.total!==last)rank=i+1;
+    r.rank=rank;
+    last=r.total;
+  });
+
+  $('resultOutput').innerHTML=
+    '<div class="panel">'+
+      '<h3>'+esc(m?.name||'মাদ্রাসার নাম')+'</h3>'+
+      '<p>'+esc(m?.address||'')+'</p>'+
+      '<h3>'+esc(e.name)+' — '+esc(e.clas)+' — '+esc(e.year)+'</h3>'+
+      '<div class="tablewrap"><table>'+
+        '<tr><th>মেধা</th><th>রোল</th><th>শিক্ষার্থীর নাম</th>'+
+        e.subjects.map(x=>'<th>'+esc(x.name)+'<br>('+x.max+')</th>').join('')+
+        '<th>মোট</th><th>শতাংশ</th><th>গ্রেড</th><th>ফলাফল</th></tr>'+
+        rows.map(r=>
+          '<tr><td>'+r.rank+'</td>'+
+          '<td>'+esc(r.s.roll)+'</td>'+
+          '<td>'+esc(r.s.name)+'</td>'+
+          e.subjects.map(x=>
+            '<td>'+(r.r&&r.r.marks[x.name]!==undefined?esc(r.r.marks[x.name]):'—')+'</td>'
+          ).join('')+
+          '<td>'+r.total+'/'+r.totalMax+'</td>'+
+          '<td>'+(r.complete?r.p.toFixed(2)+'%':'—')+'</td>'+
+          '<td>'+(r.complete?r.g[0]:'—')+'</td>'+
+          '<td>'+(r.complete?(r.pass?'পাস':'ফেল'):'অসম্পূর্ণ')+'</td></tr>'
+        ).join('')+
+      '</table></div>'+
+      '<p class="small">মেধাক্রম মোট নম্বর অনুযায়ী। নম্বর অসম্পূর্ণ থাকলে ফলাফল অসম্পূর্ণ দেখাবে।</p>'+
+      '<p style="text-align:right;margin-top:35px;padding-top:8px;">' +
+      '________________________<br>মুহতামিম / পরিচালকের স্বাক্ষর</p>'+
+    '</div>';
 }
+
 $('showResults').addEventListener('click',showResults);
+
 $('printResults').addEventListener('click',()=>{
-if(!$('resultOutput').innerHTML)return alert('আগে ফলাফল দেখুন।');
-window.print();
+  if(!$('resultOutput').innerHTML)
+    return alert('আগে মাদ্রাসা ও পরীক্ষা নির্বাচন করে ফলাফল দেখুন।');
+
+  window.print();
 });
+
 $('exportData').addEventListener('click',()=>{
-const data={version:1,madrasas,students,exams,records};
-const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-const url=URL.createObjectURL(blob),a=document.createElement('a');
-a.href=url;a.download='IMRMS-backup.json';a.click();URL.revokeObjectURL(url);
+  const data={version:1,madrasas,students,exams,records};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='IMRMS-backup.json';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
+
 $('importButton').addEventListener('click',()=>$('importFile').click());
+
 $('importFile').addEventListener('change',async ev=>{
-const f=ev.target.files[0];if(!f)return;
-try{
-const d=JSON.parse(await f.text());
-if(!Array.isArray(d.madrasas)||!Array.isArray(d.students)||!Array.isArray(d.exams)||!Array.isArray(d.records))throw Error();
-if(!confirm('বর্তমান ডেটা প্রতিস্থাপন করবেন? আগে ব্যাকআপ নিন।'))return;
-madrasas=d.madrasas;students=d.students;exams=d.exams;records=d.records;save();alert('ব্যাকআপ ফিরিয়ে আনা হয়েছে।');
-}catch(err){alert('ব্যাকআপ ফাইল সঠিক নয়।');}
-ev.target.value='';
+  const f=ev.target.files[0];
+  if(!f)return;
+
+  try{
+    const d=JSON.parse(await f.text());
+
+    if(!Array.isArray(d.madrasas)||!Array.isArray(d.students)||
+       !Array.isArray(d.exams)||!Array.isArray(d.records))throw Error();
+
+    if(!confirm('বর্তমান ডেটা প্রতিস্থাপন করবেন? আগে ব্যাকআপ নিন।'))return;
+
+    madrasas=d.madrasas;
+    students=d.students;
+    exams=d.exams;
+    records=d.records;
+
+    save();
+    alert('ব্যাকআপ ফিরিয়ে আনা হয়েছে।');
+  }catch(err){
+    alert('ব্যাকআপ ফাইল সঠিক নয়।');
+  }
+
+  ev.target.value='';
 });
+
 window.deleteM=id=>{
-if(!confirm('মাদ্রাসাটি ও এর সংশ্লিষ্ট শিক্ষার্থী, পরীক্ষা এবং ফলাফল মুছবেন?'))return;
-const mids=madrasas.filter(m=>m.id!==id);
-const ss=students.filter(s=>s.mid!==id);
-const es=exams.filter(e=>e.mid!==id);
-const eids=es.map(e=>e.id),sids=ss.map(s=>s.id);
-madrasas=mids;students=ss;exams=es;records=records.filter(r=>eids.includes(r.eid)&&sids.includes(r.sid));save();
-};
-window.deleteS=id=>{if(confirm('শিক্ষার্থী ও তার ফলাফল মুছবেন?')){students=students.filter(s=>s.id!==id);records=records.filter(r=>r.sid!==id);save();}};
-window.deleteE=id=>{if(confirm('পরীক্ষা ও এর ফলাফল মুছবেন?')){exams=exams.filter(e=>e.id!==id);records=records.filter(r=>r.eid!==id);save();}};
-document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>{
-document.querySelectorAll('.tab').forEach(s=>s.classList.add('hide'));
-$(b.dataset.tab).classList.remove('hide');
-document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));
-}));
-render();
-</script>
-</body>
-  </html>
-                      
+  if(!confirm('মাদ্রাসাটি ও এর সংশ্লিষ্ট শিক্ষার্থী, পরীক্ষা এবং ফলাফল মুছবেন?'))return;
+
+  const es=exams.filter(e=>e.mid!==id);
+  const ss=students.filter(s=>s.mid!==id);
+  const eids=es.map(e=>e.id);
+  const sids=ss.map(s=>s.id);
+
+  madrasas=madrasas.filter(m=>m.id!==id);
+  students=ss;
+  exams=es;
+  records=re
